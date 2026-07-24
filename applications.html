@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Applications — CareerHub{% endblock %}
+
+{% block content %}
+<div class="page-header page-header--row">
+    <div>
+        <p class="eyebrow">Every send, tracked</p>
+        <h1>Applications</h1>
+    </div>
+    <a href="{{ url_for('new_application') }}" class="btn btn--primary">+ Add application</a>
+</div>
+
+<div class="filter-tabs">
+    <a href="{{ url_for('applications', status='all') }}" class="filter-tab {% if active_filter == 'all' %}filter-tab--active{% endif %}">All</a>
+    {% for stage in stages %}
+    <a href="{{ url_for('applications', status=stage) }}" class="filter-tab {% if active_filter == stage %}filter-tab--active{% endif %}">{{ stage }}</a>
+    {% endfor %}
+</div>
+
+{% if apps %}
+<div class="card-grid">
+    {% for a in apps %}
+    <div class="app-card">
+        <div class="app-card__header">
+            <div>
+                <h3>{{ a.company }}</h3>
+                <p class="app-card__role">{{ a.role }}</p>
+            </div>
+            <span class="badge badge--{{ a.status|lower }}">{{ a.status }}</span>
+        </div>
+
+        {% if a.match_score is not none %}
+        <div class="match-bar">
+            <div class="match-bar__fill" style="width: {{ a.match_score }}%;"></div>
+            <span class="match-bar__label">{{ a.match_score }}% match</span>
+        </div>
+        {% endif %}
+
+        <div class="app-card__meta">
+            <span class="mono">Applied {{ a.applied_date.strftime('%b %d, %Y') }}</span>
+            {% if a.job_url %}<a href="{{ a.job_url }}" target="_blank" rel="noopener">Job posting &rarr;</a>{% endif %}
+        </div>
+
+        <div class="app-card__actions">
+            <a href="{{ url_for('edit_application', app_id=a.id) }}" class="btn btn--ghost btn--small">Edit</a>
+            <form method="POST" action="{{ url_for('delete_application', app_id=a.id) }}" onsubmit="return confirm('Delete this application?');">
+                <button type="submit" class="btn btn--ghost btn--small btn--danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <p>Nothing here yet for this filter.</p>
+    <a href="{{ url_for('new_application') }}" class="btn btn--primary">Add an application</a>
+</div>
+{% endif %}
+{% endblock %}

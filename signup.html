@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Sign up — CareerHub{% endblock %}
+
+{% block content %}
+<div class="auth-screen">
+    <div class="auth-card">
+        <p class="eyebrow">Stage 00 — Set up</p>
+        <h1>Start tracking</h1>
+        <p class="auth-card__subtitle">One place for every application, from send to signed offer.</p>
+
+        <form method="POST" class="form">
+            <label class="field">
+                <span class="field__label">Username</span>
+                <input type="text" name="username" required autofocus placeholder="jane_doe">
+            </label>
+            <label class="field">
+                <span class="field__label">Email</span>
+                <input type="email" name="email" required placeholder="jane@example.com">
+            </label>
+            <label class="field">
+                <span class="field__label">Password</span>
+                <input type="password" name="password" required minlength="6" placeholder="At least 6 characters">
+            </label>
+            <button type="submit" class="btn btn--primary btn--block">Create account</button>
+        </form>
+
+        <p class="auth-card__footer">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — CareerHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <p class="eyebrow">Your search, at a glance</p>
+    <h1>Dashboard</h1>
+</div>
+
+<section class="stat-row">
+    <div class="stat-card">
+        <span class="stat-card__value">{{ total }}</span>
+        <span class="stat-card__label">Total applications</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-card__value">{{ response_rate }}%</span>
+        <span class="stat-card__label">Reached interview or offer</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-card__value">{{ avg_match if avg_match is not none else '—' }}{% if avg_match is not none %}%{% endif %}</span>
+        <span class="stat-card__label">Average resume match</span>
+    </div>
+</section>
+
+<section class="pipeline">
+    <h2 class="section-title">The pipeline</h2>
+    <div class="pipeline__track">
+        {% for stage in stages %}
+        <div class="pipeline__stage">
+            <span class="pipeline__index">{{ '%02d' % loop.index }}</span>
+            <span class="pipeline__count">{{ status_data[stage] }}</span>
+            <span class="pipeline__label">{{ stage }}</span>
+        </div>
+        {% if not loop.last %}<div class="pipeline__connector"></div>{% endif %}
+        {% endfor %}
+    </div>
+</section>
+
+<section class="recent">
+    <div class="section-title-row">
+        <h2 class="section-title">Recently updated</h2>
+        <a href="{{ url_for('applications') }}" class="link-arrow">View all applications &rarr;</a>
+    </div>
+
+    {% if recent %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Match</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in recent %}
+            <tr>
+                <td>{{ a.company }}</td>
+                <td>{{ a.role }}</td>
+                <td><span class="badge badge--{{ a.status|lower }}">{{ a.status }}</span></td>
+                <td>{% if a.match_score is not none %}{{ a.match_score }}%{% else %}—{% endif %}</td>
+                <td class="mono">{{ a.last_updated.strftime('%b %d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No applications yet. The dashboard fills in once you start tracking.</p>
+        <a href="{{ url_for('new_application') }}" class="btn btn--primary">Add your first application</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

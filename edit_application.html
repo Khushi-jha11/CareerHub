@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ app.company }} — CareerHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <p class="eyebrow">Editing</p>
+    <h1>{{ app.company }} — {{ app.role }}</h1>
+</div>
+
+<form method="POST" class="form form--card">
+    <div class="form-grid">
+        <label class="field">
+            <span class="field__label">Company</span>
+            <input type="text" name="company" required value="{{ app.company }}">
+        </label>
+        <label class="field">
+            <span class="field__label">Role</span>
+            <input type="text" name="role" required value="{{ app.role }}">
+        </label>
+    </div>
+
+    <label class="field">
+        <span class="field__label">Status</span>
+        <select name="status">
+            {% for stage in stages %}
+            <option value="{{ stage }}" {% if app.status == stage %}selected{% endif %}>{{ stage }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <label class="field">
+        <span class="field__label">Job posting URL</span>
+        <input type="url" name="job_url" value="{{ app.job_url }}">
+    </label>
+
+    <label class="field">
+        <span class="field__label">Job description</span>
+        <textarea name="job_description" rows="6">{{ app.job_description }}</textarea>
+    </label>
+
+    <label class="field">
+        <span class="field__label">Notes</span>
+        <textarea name="notes" rows="4" placeholder="Interview notes, contacts, follow-ups...">{{ app.notes }}</textarea>
+    </label>
+
+    {% if app.match_score is not none %}
+    <div class="match-summary">
+        <p><strong>{{ app.match_score }}%</strong> match to your saved resume</p>
+        {% if app.matched_skills %}<p class="mono small">Matched: {{ app.matched_skills }}</p>{% endif %}
+        {% if app.missing_skills %}<p class="mono small">Missing: {{ app.missing_skills }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <div class="form-actions">
+        <a href="{{ url_for('applications') }}" class="btn btn--ghost">Cancel</a>
+        <button type="submit" class="btn btn--primary">Save changes</button>
+    </div>
+</form>
+{% endblock %}

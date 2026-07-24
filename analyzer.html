@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Resume Match — CareerHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <p class="eyebrow">Stage check</p>
+    <h1>Resume match</h1>
+    <p class="page-header__subtitle">Paste your resume and a job description to see how well they line up, and which skills are missing.</p>
+</div>
+
+<form method="POST" class="form form--card">
+    <div class="form-grid">
+        <label class="field">
+            <span class="field__label">Your resume (plain text)</span>
+            <textarea name="resume_text" rows="12" placeholder="Paste your resume content here...">{{ resume_text }}</textarea>
+        </label>
+        <label class="field">
+            <span class="field__label">Job description</span>
+            <textarea name="job_description" rows="12" placeholder="Paste the job description here...">{{ job_description }}</textarea>
+        </label>
+    </div>
+
+    <label class="checkbox">
+        <input type="checkbox" name="save_resume">
+        <span>Save this resume so new applications auto-match against it</span>
+    </label>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn--primary">Check match</button>
+    </div>
+</form>
+
+{% if result %}
+<section class="result-card">
+    <div class="result-card__score">
+        <span class="result-card__number">{{ result.score }}%</span>
+        <span class="result-card__label">match score</span>
+    </div>
+    <div class="result-card__details">
+        <div>
+            <h3>Matched skills</h3>
+            {% if result.matched_skills %}
+            <div class="chip-row">
+                {% for skill in result.matched_skills %}<span class="chip chip--matched">{{ skill }}</span>{% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">No overlapping skills found from our vocabulary.</p>
+            {% endif %}
+        </div>
+        <div>
+            <h3>Missing skills</h3>
+            {% if result.missing_skills %}
+            <div class="chip-row">
+                {% for skill in result.missing_skills %}<span class="chip chip--missing">{{ skill }}</span>{% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Nothing obviously missing — nice.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if saved_resumes %}
+<section class="saved-resumes">
+    <h2 class="section-title">Saved resumes</h2>
+    <ul class="saved-resumes__list">
+        {% for r in saved_resumes %}
+        <li>{{ r.label }} <span class="muted mono">— {{ r.created_at.strftime('%b %d, %Y') }}</span></li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

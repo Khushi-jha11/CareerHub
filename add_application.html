@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Add application — CareerHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <p class="eyebrow">New entry</p>
+    <h1>Add an application</h1>
+</div>
+
+<form method="POST" class="form form--card">
+    <div class="form-grid">
+        <label class="field">
+            <span class="field__label">Company</span>
+            <input type="text" name="company" required placeholder="Acme Corp">
+        </label>
+        <label class="field">
+            <span class="field__label">Role</span>
+            <input type="text" name="role" required placeholder="Backend Engineer">
+        </label>
+    </div>
+
+    <div class="form-grid">
+        <label class="field">
+            <span class="field__label">Applied date</span>
+            <input type="date" name="applied_date" value="{{ '' }}">
+        </label>
+        <label class="field">
+            <span class="field__label">Job posting URL (optional)</span>
+            <input type="url" name="job_url" placeholder="https://...">
+        </label>
+    </div>
+
+    <label class="field">
+        <span class="field__label">Job description (optional — enables auto resume matching)</span>
+        <textarea name="job_description" rows="8" placeholder="Paste the job description here..."></textarea>
+    </label>
+
+    <p class="field__hint">If you've saved a resume on the Resume Match page, we'll automatically score this application against it.</p>
+
+    <div class="form-actions">
+        <a href="{{ url_for('applications') }}" class="btn btn--ghost">Cancel</a>
+        <button type="submit" class="btn btn--primary">Save application</button>
+    </div>
+</form>
+{% endblock %}
